@@ -9,12 +9,10 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const order = getDbOrderById(id);
-
+    const order = await getDbOrderById(id);
     if (!order) {
       return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 });
     }
-
     return NextResponse.json({ success: true, order });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -28,16 +26,13 @@ export async function PATCH(
   try {
     const { id } = await params;
     const { status } = await request.json();
-
     if (!status) {
       return NextResponse.json({ success: false, error: 'Status is required' }, { status: 400 });
     }
-
-    const updated = updateDbOrderStatus(id, status);
+    const updated = await updateDbOrderStatus(id, status);
     if (!updated) {
       return NextResponse.json({ success: false, error: 'Order not found' }, { status: 404 });
     }
-
     return NextResponse.json({ success: true, message: 'Order status updated' });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

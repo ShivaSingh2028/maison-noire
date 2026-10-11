@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const orders = getDbOrders();
+    const orders = await getDbOrders();
     return NextResponse.json({ success: true, count: orders.length, orders });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -15,15 +15,13 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
     if (!body.customer_email || !body.customer_name || !body.items || !body.total) {
       return NextResponse.json(
         { success: false, error: 'Customer details, items, and total are required' },
         { status: 400 }
       );
     }
-
-    const order = createDbOrder({
+    const order = await createDbOrder({
       customer_email: body.customer_email,
       customer_name: body.customer_name,
       shipping_address: body.shipping_address || {},
@@ -34,7 +32,6 @@ export async function POST(request: NextRequest) {
       tax: body.tax || 0,
       total: body.total,
     });
-
     return NextResponse.json({ success: true, order }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const featured = searchParams.get('featured') === 'true' ? true : undefined;
     const isNew = searchParams.get('new') === 'true' ? true : undefined;
 
-    const products = getDbProducts({ category, search, featured, isNew });
+    const products = await getDbProducts({ category, search, featured, isNew });
     return NextResponse.json({ success: true, count: products.length, products });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -27,8 +27,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    const created = createDbProduct(body);
+    const created = await createDbProduct(body);
     return NextResponse.json({ success: true, product: created }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

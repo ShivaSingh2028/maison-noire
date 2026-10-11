@@ -9,12 +9,10 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const product = getDbProductBySlug(slug);
-
+    const product = await getDbProductBySlug(slug);
     if (!product) {
       return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 });
     }
-
     return NextResponse.json({ success: true, product });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -28,12 +26,10 @@ export async function PUT(
   try {
     const { slug } = await params;
     const body = await request.json();
-    const updated = updateDbProduct(slug, body);
-
+    const updated = await updateDbProduct(slug, body);
     if (!updated) {
       return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 });
     }
-
     return NextResponse.json({ success: true, product: updated });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
@@ -46,12 +42,10 @@ export async function DELETE(
 ) {
   try {
     const { slug } = await params;
-    const deleted = deleteDbProduct(slug);
-
+    const deleted = await deleteDbProduct(slug);
     if (!deleted) {
       return NextResponse.json({ success: false, error: 'Product not found' }, { status: 404 });
     }
-
     return NextResponse.json({ success: true, message: 'Product deleted' });
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
